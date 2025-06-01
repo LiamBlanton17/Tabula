@@ -32,6 +32,16 @@ class DataFrame implements ArrayAccess {
         return [$row_count, $col_count];
     }
 
+    /**
+     * Function to access a row by integer
+     * 
+     * @param int $n is the row number to acess
+     * @return mixed the row of data or false if the row does not exist
+     */
+    public function get(int $n): mixed {
+        return $this->data[$n] ?? FALSE;
+    } 
+
     #
     # ArrayAccess functions
     #
