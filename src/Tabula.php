@@ -31,4 +31,50 @@ class Tabula {
         return new DataFrame($decoded_data);
     }
 
+    /**
+     * Create a new DataFrame from a CSV file
+     *
+     * @param string $path Path to the CSV file
+     * @return DataFrame The created DataFrame
+     * @throws Exception If the file cannot be opened or is malformed
+     */
+    public static function fromCSV(string $path): DataFrame {
+        $data = self::_readCSV($path);
+        return new DataFrame($data);
+    }
+
+    /**
+     * Internal CSV reader function
+     *
+     * @param string $path Path to the CSV file
+     * @return array<int, array<string, string>> Parsed data
+     * @throws Exception If file can't be opened or CSV is invalid
+     */
+    private static function _readCSV(string $path): array {
+        $data = [];
+        $handle = fopen($path, "r");
+
+        if(!$handle){
+            throw new Exception("Failed to open CSV file: $path");
+        }
+
+        $headers = fgetcsv($handle);
+        if(!$headers){
+            fclose($handle);
+            throw new Exception("Empty or invalid CSV file: $path");
+        }
+
+        $num_headers = count($headers);
+        while(($row = fgetcsv($handle)) !== false){
+            if(count($row) !== $num_headers){
+                fclose($handle);
+                throw new Exception("Row does not match header length in CSV file: $path");
+            }
+            $data[] = array_combine($headers, $row);
+        }
+
+        fclose($handle);
+        return $data;
+    }
+
 }
