@@ -42,6 +42,30 @@ class DataFrame implements ArrayAccess {
         return $this->data[$n] ?? FALSE;
     } 
 
+    /**
+     * Function to get the head of the DataFrame
+     * 
+     * @param int $n is the number of rows to get
+     * @param bool $as_dataframe is whether to return as a DataFrame or not
+     * @return mixed is the head, either as an array or a new DataFrame
+     */
+    public function head(int $n = 1, bool $as_dataframe = FALSE){
+        $data = array_slice($this->data, 0, $n);
+        return $as_dataframe ? new self($data) : $data;
+    }
+
+    /**
+     * Function to get the tail of the DataFrame
+     * 
+     * @param int $n is the number of rows to get
+     * @param bool $as_dataframe is whether to return as a DataFrame or not
+     * @return mixed is the tail, either as an array or a new DataFrame
+     */
+    public function tail(int $n = 1, bool $as_dataframe = FALSE){
+        $data = array_slice($this->data, -$n);
+        return $as_dataframe ? new self($data) : $data;
+    }
+
     #
     # ArrayAccess functions
     #
