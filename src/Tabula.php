@@ -20,4 +20,15 @@ class Tabula {
         return new DataFrame($data);
     }
 
+    /**
+     * Create a new DataFrame from a JSON string
+     * 
+     * @param string $data a JSON string
+     * @return DataFrame the new DataFrame
+     */
+    public static function fromJSON(string $data): DataFrame {
+        $decoded_data = json_decode($data, TRUE);
+        return new DataFrame($decoded_data);
+    }
+
 }
