@@ -97,6 +97,27 @@ class DataFrame implements ArrayAccess {
         return $as_dataframe ? new self($data) : $data;
     }
 
+    /**
+     * Rename a column to another name
+     * 
+     * @param mixed $old is the current columns name
+     * @param mixed $new is the new columns name
+     * @return DataFrame is the new DataFrame
+     */
+    public function renameCol(mixed $old, mixed $new): DataFrame {
+        $data = $this->data;
+
+        foreach($data as &$row){
+            $row[$new] = NULL;
+            if(array_key_exists($old, $row)){
+                $row[$new] = $row[$old];
+                unset($row[$old]);
+            }
+        }
+
+        return new self($data);
+    }
+
     #
     # Functional functions (filter, map, ect)
     #
