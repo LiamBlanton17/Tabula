@@ -98,6 +98,34 @@ class DataFrame implements ArrayAccess {
     }
 
     #
+    # Functional functions (filter, map, ect)
+    #
+
+    /**
+     * Provide filter with a closure that returns a boolean to filter the DataFrame
+     * 
+     * @param callable $callback is the filter fuction
+     * @param bool $as_dataframe is whether to return as a DataFrame or not
+     * @return mixed the filtered data, either as an array or a new DataFrame 
+     */
+    public function filter(callable $callback, bool $as_dataframe = TRUE): mixed {
+        $data = array_filter($this->data, $callback);
+        return $as_dataframe ? new self($data) : $data; 
+    }
+
+    /**
+     * Provide map with a closure that thats a row of data an manipulates it
+     * 
+     * @param callable $callback is the map fuction
+     * @param bool $as_dataframe is whether to return as a DataFrame or not
+     * @return mixed the filtered data, either as an array or a new DataFrame 
+     */
+    public function map(callable $callback, bool $as_dataframe = TRUE): mixed {
+        $data = array_map($callback, $this->data);
+        return $as_dataframe ? new self($data) : $data; 
+    }
+
+    #
     # ArrayAccess functions
     #
     
