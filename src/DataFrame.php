@@ -49,7 +49,7 @@ class DataFrame implements ArrayAccess {
      * @param bool $as_dataframe is whether to return as a DataFrame or not
      * @return mixed is the head, either as an array or a new DataFrame
      */
-    public function head(int $n = 1, bool $as_dataframe = FALSE){
+    public function head(int $n = 1, bool $as_dataframe = FALSE): mixed {
         $data = array_slice($this->data, 0, $n);
         return $as_dataframe ? new self($data) : $data;
     }
@@ -61,8 +61,21 @@ class DataFrame implements ArrayAccess {
      * @param bool $as_dataframe is whether to return as a DataFrame or not
      * @return mixed is the tail, either as an array or a new DataFrame
      */
-    public function tail(int $n = 1, bool $as_dataframe = FALSE){
+    public function tail(int $n = 1, bool $as_dataframe = FALSE): mixed {
         $data = array_slice($this->data, -$n);
+        return $as_dataframe ? new self($data) : $data;
+    }
+
+    /**
+     * Function to get a slice of the DataFrame
+     * 
+     * @param int $start is the starting index (0-based)
+     * @param int $n is the number of rows to get
+     * @param bool $as_dataframe is whether to return as a DataFrame or not
+     * @return mixed the slice, either as an array or a new DataFrame
+     */
+    public function slice(int $start, int $n, bool $as_dataframe = FALSE): mixed {
+        $data = array_slice($this->data, $start, $n);
         return $as_dataframe ? new self($data) : $data;
     }
 
