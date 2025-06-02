@@ -19,6 +19,15 @@ class DataFrame implements ArrayAccess {
     #
 
     /**
+     * Function to get the data in the DataFrame as a PHP array
+     * 
+     * @return array the data as an array
+     */
+    public function toArray(): array {
+        return $this->data;
+    }
+
+    /**
      * Function to get the columns of the DataFrame
      * 
      * @return array<string> the names of the columns
