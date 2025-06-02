@@ -19,6 +19,15 @@ class DataFrame implements ArrayAccess {
     #
 
     /**
+     * Function to get the columns of the DataFrame
+     * 
+     * @return array<string> the names of the columns
+     */
+    public function columns(): array {
+        return array_keys($this->data[0] ?? []);
+    } 
+
+    /**
      * Function to get the shape of the DataFrame
      * 
      * @return array<int, int> the count of rows and columns
@@ -89,7 +98,7 @@ class DataFrame implements ArrayAccess {
      * @param mixed $offset is the column to check if it exists
      * @param bool if the offset exists
      */
-    public function offsetExists(mixed $offset): bool {
+    public function offsetExists($offset): bool {
         return isset($this->data[0][$offset]);
     }
 
@@ -101,7 +110,7 @@ class DataFrame implements ArrayAccess {
      * @param mixed $offset is either a column name or an array of column names
      * @return mixed either an array or a new DataFrame
      */
-    public function offsetGet(mixed $offset): mixed {
+    public function offsetGet($offset): mixed {
         if(is_array($offset)){
             $new_data = [];
 
@@ -126,7 +135,7 @@ class DataFrame implements ArrayAccess {
      * @param mixed $value is the value to set each row's data too
      * @return void
      */
-    public function offsetSet(mixed $offset, mixed $value): void {
+    public function offsetSet($offset, $value): void {
         foreach($this->data as &$row){
             $row[$offset] = $value;
         }
@@ -138,7 +147,7 @@ class DataFrame implements ArrayAccess {
      * @param mixed $offset is the column name to unset
      * @return void
      */
-    public function offsetUnset(mixed $offset): void {
+    public function offsetUnset($offset): void {
         foreach($this->data as &$row){
             unset($row[$offset]);
         }
