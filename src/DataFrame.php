@@ -3,7 +3,7 @@
 /**
  * 
  */
-class DataFrame implements ArrayAccess, Countable, Iterator {
+class DataFrame implements ArrayAccess, Countable, IteratorAggregate {
 
     /**
      * @var array the associative array of data
@@ -156,55 +156,14 @@ class DataFrame implements ArrayAccess, Countable, Iterator {
     }
 
     #
-    # Iterator functions and data
+    # Iterator function
     #
 
     /**
-     * @var int $position is used by the Iterator interface to make DataFrame iterable
+     * Used by the IteratorAggregate interface, allows DataFrame to be iterable
      */
-    private int $position = 0;
-
-    /**
-     * Used by the Iterator interface
-     * 
-     * @return array the current row
-     */
-    public function current() {
-        return $this->data[$this->position];
-    }
-
-    /**
-     * Used by the Iterator interface
-     * 
-     * @return int the current position
-     */
-    public function key() {
-        return $this->position;
-    }
-
-    /**
-     * Used by the Iterator interface
-     * 
-     */
-    public function next(): void {
-        $this->position++;
-    }
-
-    /**
-     * Used by the Iterator interface
-     * 
-     */
-    public function rewind(): void {
-        $this->position = 0;
-    }
-
-    /**
-     * Used by the Iterator interface
-     * 
-     * @return bool if the position is valid
-     */
-    public function valid(): bool {
-        return isset($this->data[$this->position]);
+    public function getIterator(): Traversable {
+        return new ArrayIterator($this->data);
     }
 
     #
