@@ -15,9 +15,9 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
     }
 
     #
-    # Basic functions
+    # Export functions
     #
-
+    
     /**
      * Function to get the data in the DataFrame as a PHP array
      * 
@@ -26,6 +26,34 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
     public function toArray(): array {
         return $this->data;
     }
+
+    /**
+     * Export the DataFrame to a CSV file
+     *
+     * @param string $filename The path to the CSV file
+     * @param string $delimiter The field delimiter
+     * @return void
+     */
+    public function toCSV(string $filename, string $delimiter = ","): void {
+        $fp = fopen($filename, 'w');
+        if(!$fp){
+            throw new Exception("Unable to open file for writing: $filename");
+        }
+
+        if(!empty($this->data)){
+            fputcsv($fp, array_keys($this->data[0]), $delimiter);
+        }
+
+        foreach($this->data as $row){
+            fputcsv($fp, $row, $delimiter);
+        }
+
+        fclose($fp);
+    }
+
+    #
+    # Basic functions
+    #
 
     /**
      * Function to get the columns of the DataFrame
