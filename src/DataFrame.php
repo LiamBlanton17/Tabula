@@ -119,6 +119,31 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
     }
 
     /**
+     * Add a new column (alternative to array access)
+     * 
+     * @param mixed $col is the new column name
+     * @param mixed $value is the value to set it too
+     * @return void
+     */
+    public function addCol(mixed $col, mixed $value): void {
+        $this[$col] = $value;
+    }
+
+    /**
+     * Drop a column (alternative to array access)
+     * 
+     * @param mixed $col is the new column name
+     * @return void
+     */
+    public function dropCol(mixed $col): void {
+        unset($this[$col]);
+    }
+
+    #
+    # Countable interface
+    #
+
+    /**
      * Implement a count function for Countable interface
      * 
      * @return int the number of rows
