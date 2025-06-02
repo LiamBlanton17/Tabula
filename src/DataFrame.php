@@ -3,7 +3,7 @@
 /**
  * 
  */
-class DataFrame implements ArrayAccess, Countable, IteratorAggregate {
+class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable {
 
     /**
      * @var array the associative array of data
@@ -164,6 +164,17 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate {
      */
     public function getIterator(): Traversable {
         return new ArrayIterator($this->data);
+    }
+
+    #
+    # JSON serialize function
+    #
+
+    /**
+     * Used by JsonSerializable
+     */
+    public function jsonSerialize(): mixed {
+        return $this->data;
     }
 
     #
