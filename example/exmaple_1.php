@@ -53,6 +53,6 @@ $data = [
 
 $df = Tabula::fromArray($data);
 
-$names_of_50k_earners = $df->filter(fn($row) => $row['Salary'] > 50000)['Name'];
+$names_of_60k_earners = $df->filter(fn($row) => $row['Salary'] > 60000)['Name'];
 
-var_dump($names_of_50k_earners);
+var_dump($names_of_60k_earners);

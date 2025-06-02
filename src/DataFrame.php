@@ -3,7 +3,7 @@
 /**
  * 
  */
-class DataFrame implements ArrayAccess {
+class DataFrame implements ArrayAccess, Countable {
 
     /**
      * @var array the associative array of data
@@ -116,6 +116,15 @@ class DataFrame implements ArrayAccess {
         }
 
         return new self($data);
+    }
+
+    /**
+     * Implement a count function for Countable interface
+     * 
+     * @return int the number of rows
+     */
+    public function count(): int {
+        return count($this->data);
     }
 
     #
