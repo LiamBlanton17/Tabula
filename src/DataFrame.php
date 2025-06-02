@@ -67,7 +67,7 @@ class DataFrame implements ArrayAccess {
      * @param bool $as_dataframe is whether to return as a DataFrame or not
      * @return mixed is the head, either as an array or a new DataFrame
      */
-    public function head(int $n = 1, bool $as_dataframe = FALSE): mixed {
+    public function head(int $n = 1, bool $as_dataframe = FALSE) {
         $data = array_slice($this->data, 0, $n);
         return $as_dataframe ? new self($data) : $data;
     }
@@ -79,7 +79,7 @@ class DataFrame implements ArrayAccess {
      * @param bool $as_dataframe is whether to return as a DataFrame or not
      * @return mixed is the tail, either as an array or a new DataFrame
      */
-    public function tail(int $n = 1, bool $as_dataframe = FALSE): mixed {
+    public function tail(int $n = 1, bool $as_dataframe = FALSE) {
         $data = array_slice($this->data, -$n);
         return $as_dataframe ? new self($data) : $data;
     }
@@ -92,7 +92,7 @@ class DataFrame implements ArrayAccess {
      * @param bool $as_dataframe is whether to return as a DataFrame or not
      * @return mixed the slice, either as an array or a new DataFrame
      */
-    public function slice(int $start, int $n, bool $as_dataframe = FALSE): mixed {
+    public function slice(int $start, int $n, bool $as_dataframe = FALSE) {
         $data = array_slice($this->data, $start, $n);
         return $as_dataframe ? new self($data) : $data;
     }
@@ -129,7 +129,7 @@ class DataFrame implements ArrayAccess {
      * @param bool $as_dataframe is whether to return as a DataFrame or not
      * @return mixed the filtered data, either as an array or a new DataFrame 
      */
-    public function filter(callable $callback, bool $as_dataframe = TRUE): mixed {
+    public function filter(callable $callback, bool $as_dataframe = TRUE) {
         $data = array_filter($this->data, $callback);
         return $as_dataframe ? new self($data) : $data; 
     }
@@ -141,7 +141,7 @@ class DataFrame implements ArrayAccess {
      * @param bool $as_dataframe is whether to return as a DataFrame or not
      * @return mixed the filtered data, either as an array or a new DataFrame 
      */
-    public function map(callable $callback, bool $as_dataframe = TRUE): mixed {
+    public function map(callable $callback, bool $as_dataframe = TRUE) {
         $data = array_map($callback, $this->data);
         return $as_dataframe ? new self($data) : $data; 
     }
@@ -156,7 +156,7 @@ class DataFrame implements ArrayAccess {
      * @param mixed $offset is the column to check if it exists
      * @param bool if the offset exists
      */
-    public function offsetExists($offset): bool {
+    public function offsetExists($offset) {
         return isset($this->data[0][$offset]);
     }
 
@@ -168,7 +168,7 @@ class DataFrame implements ArrayAccess {
      * @param mixed $offset is either a column name or an array of column names
      * @return mixed either an array or a new DataFrame
      */
-    public function offsetGet($offset): mixed {
+    public function offsetGet($offset) {
         if(is_array($offset)){
             $new_data = [];
 
@@ -193,7 +193,7 @@ class DataFrame implements ArrayAccess {
      * @param mixed $value is the value to set each row's data too
      * @return void
      */
-    public function offsetSet($offset, $value): void {
+    public function offsetSet($offset, $value) {
         foreach($this->data as &$row){
             $row[$offset] = $value;
         }
@@ -205,7 +205,7 @@ class DataFrame implements ArrayAccess {
      * @param mixed $offset is the column name to unset
      * @return void
      */
-    public function offsetUnset($offset): void {
+    public function offsetUnset($offset) {
         foreach($this->data as &$row){
             unset($row[$offset]);
         }
