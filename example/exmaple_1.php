@@ -52,5 +52,6 @@ $data = [
 ];
 
 $df = Tabula::fromArray($data);
+$new_df = $df[[['ID', 'Name']]];
 
-echo $df;
+echo $new_df;

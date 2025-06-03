@@ -253,21 +253,42 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
      * @return mixed either an array or a new DataFrame
      */
     public function offsetGet($offset) {
-        if(is_array($offset)){
-            $new_data = [];
 
+        /**
+         * When using: $df['col_name']
+         */
+        if(!is_array($offset)){
+            return array_column($this->data, $offset);
+        }
+
+        $new_data = [];
+
+        /**
+         * When using: $df[[['col_name_1', 'col_name_2']]]
+         */
+        if(is_array($offset[0])){
             foreach($this->data as $row){
                 $newRow = [];
-                foreach($offset as $colName){
+                foreach($offset[0] as $colName){
                     $newRow[$colName] = $row[$colName] ?? null;
                 }
                 $new_data[] = $newRow;
             }
-
             return new self($new_data);
         }
 
-        return array_column($this->data, $offset);
+        /**
+         * When using: $df[['col_name_1', 'col_name_2']]
+         */
+        foreach($this->data as $row){
+            $newRow = [];
+            foreach($offset as $colName){
+                $newRow[$colName] = $row[$colName] ?? null;
+            }
+            $new_data[] = $newRow;
+        }
+        return $new_data; 
+
     }
 
     /**
@@ -343,7 +364,7 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
         return [
             'shape' => $this->shape(),
             'columns' => $this->columns(),
-            'preview' => $this->head(5),
+            'preview' => $this->head(10),
         ];
     }
 
