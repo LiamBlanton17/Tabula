@@ -154,30 +154,31 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
      * @return DataFrame the new DataFrame
      */
     public function assign(string $col, $value): DataFrame {
-        $data = [];
-
-        $isFunction = is_callable($value);
-        foreach($this->data as $row){
-            $row[$col] = $isFunction ? $value($row): $value;
-            $data[] = $row;
-        }
+        $data = array_map(function($row) use($col, $value) {
+            $row[$col] = is_callable($value) ? $value($row): $value;
+            return $row;
+        }, $this->data);
 
         return new self($data);
     }
 
     /**
-     * Drop a column (alternative to array access)
+     * Drop column(s) (alternative to array access)
      * 
-     * @param mixed $col is the new column name
+     * @param mixed $col is the column name(s)
      * @return DataFrame the new DataFrame
      */
-    public function drop(mixed $col): DataFrame {
-        $data = [];
-
-        foreach($this->data as $row){
-            unset($row[$col]);
-            $data[] = $row;
+    public function drop(mixed $cols): DataFrame {
+        if(!is_array($cols)){
+            $cols = [$cols];
         }
+
+        $data = array_map(function($row) use($cols) {
+            foreach($cols as $col){
+                unset($row[$col]);
+            }
+            return $row;
+        }, $this->data);
 
         return new self($data);
     }
