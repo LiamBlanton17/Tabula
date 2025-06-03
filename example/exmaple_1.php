@@ -52,6 +52,9 @@ $data = [
 ];
 
 $df = Tabula::fromArray($data);
-$new_df = $df[[['ID', 'Name']]];
+
+$df = $df->assign('Bonus', fn($row) => $row['Salary'] * ($row['Rating'] / 10));
+
+$new_df = $df->filter(fn($row) => $row['Department'] === 'IT')->project(['Name', 'Rating', 'Bonus']);
 
 echo $new_df;

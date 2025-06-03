@@ -151,20 +151,41 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
      * 
      * @param mixed $col is the new column name
      * @param mixed $value is the value to set it too
-     * @return void
+     * @return DataFrame the new DataFrame
      */
-    public function addCol(mixed $col, mixed $value): void {
-        $this[$col] = $value;
+    public function assign(string $col, $value): DataFrame {
+        $data = [];
+
+        $isFunction = is_callable($value);
+        foreach($this->data as $row){
+            $row[$col] = $isFunction ? $value($row): $value;
+            $data[] = $row;
+        }
+
+        return new self($data);
     }
 
     /**
      * Drop a column (alternative to array access)
      * 
      * @param mixed $col is the new column name
-     * @return void
+     * @return DataFrame the new DataFrame
      */
-    public function dropCol(mixed $col): void {
-        unset($this[$col]);
+    public function drop(mixed $col): DataFrame {
+        $data = [];
+
+        foreach($this->data as $row){
+            unset($row[$col]);
+            $data[] = $row;
+        }
+
+        return new self($data);
+    }
+    /**
+     * Create a new DataFrame with only the projected columns (alternate to $df[[['col1'...]]])
+     */
+    public function project(array $columns): DataFrame {
+        return $this[[$columns]];
     }
 
     #
