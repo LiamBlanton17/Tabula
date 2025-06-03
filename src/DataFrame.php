@@ -306,59 +306,11 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
         if (empty($this->data)) {
             return "Empty DataFrame";
         }
-
-        $maxRows = 10; // show only first 10 rows
-        $truncateLength = 15; // truncate long cell values
-        $cols = $this->columns();
-
-        // Collect column widths
-        $colWidths = array_map('strlen', $cols);
-        foreach (array_slice($this->data, 0, $maxRows) as $row) {
-            foreach ($cols as $col) {
-                $cell = $row[$col] ?? '';
-                $str = is_scalar($cell) ? strval($cell) : json_encode($cell);
-                $colWidths[$col] = max($colWidths[$col], strlen(mb_substr($str, 0, $truncateLength)));
-            }
-        }
-
-        // Helper to pad/truncate values
-        $formatCell = function ($val, $width) use ($truncateLength) {
-            $val = is_scalar($val) ? strval($val) : json_encode($val);
-            $val = mb_substr($val, 0, $truncateLength);
-            return str_pad($val, $width);
-        };
-
-        // Header
-        $output = '';
-        foreach ($cols as $col) {
-            $output .= str_pad($col, $colWidths[$col]) . ' | ';
-        }
-        $output = rtrim($output, ' | ') . "\n";
-
-        // Divider
-        foreach ($cols as $col) {
-            $output .= str_repeat('-', $colWidths[$col]) . '-+-';
-        }
-        $output = rtrim($output, '-+-') . "\n";
-
-        // Data rows
-        foreach (array_slice($this->data, 0, $maxRows) as $row) {
-            foreach ($cols as $col) {
-                $output .= $formatCell($row[$col] ?? '', $colWidths[$col]) . ' | ';
-            }
-            $output = rtrim($output, ' | ') . "\n";
-        }
-
-        if (count($this->data) > $maxRows) {
-            $output .= "... (" . count($this->data) . " rows total)\n";
-        }
-
-        return $output;
+        return "Not empty DataFrame";
     }
 
-
     /**
-     * Simple debugInfo function
+     * Simple debug function
      */
     public function __debugInfo(): array {
         return [
