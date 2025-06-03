@@ -303,10 +303,37 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
      * Simple toString function
      */
     public function __toString(): string {
-        if (empty($this->data)) {
+        if(empty($this->data)){
             return "Empty DataFrame";
         }
-        return "Not empty DataFrame";
+
+        // Define columns and widths
+        $columns = $this->columns();
+        $cols_max_width = array_reduce($this->data, fn($out, $row) => array_combine(array_keys($out), array_map(fn($col) => max($out[$col], strlen($row[$col] ?? '')), array_keys($out))), array_combine($columns, array_map('strlen', $columns)));
+        $rows = [];
+
+        // Add row function
+        $addRow = fn($spacer, $func) => "|$spacer".implode("$spacer|$spacer", array_map(fn($col) => $func($col), $columns))."$spacer|";
+
+        // Seperator row function
+        $addSeperatorRow = fn() => $addRow('-', fn($col) => str_repeat('-', $cols_max_width[$col]));
+
+        // Separator row
+        $rows[] = $addSeperatorRow();
+
+        // Header row
+        $rows[] = $addRow(' ', fn($col) => str_pad($col, $cols_max_width[$col]));
+
+        // Separator row
+        $rows[] = $addSeperatorRow();
+
+        // Data rows
+        $rows = array_merge($rows, array_map(fn($row) => $addRow(' ', fn($col) => str_pad($row[$col] ?? '', $cols_max_width[$col])), $this->head(10)));
+
+        // Separator row
+        $rows[] = $addSeperatorRow();
+
+        return "\n".implode("\n", $rows)."\n\n";
     }
 
     /**

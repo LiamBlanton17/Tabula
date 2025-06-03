@@ -53,13 +53,4 @@ $data = [
 
 $df = Tabula::fromArray($data);
 
-foreach($df as $row){
-    var_dump($row);
-    echo "\n\n";
-}
-
-echo "\n\n\n";
-
-$names_of_60k_earners = $df->filter(fn($row) => $row['Salary'] > 60000)['Name'];
-$number_of_60k_earners = count($names_of_60k_earners);
 echo $df;
