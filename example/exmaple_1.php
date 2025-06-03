@@ -62,5 +62,4 @@ echo "\n\n\n";
 
 $names_of_60k_earners = $df->filter(fn($row) => $row['Salary'] > 60000)['Name'];
 $number_of_60k_earners = count($names_of_60k_earners);
-echo "$number_of_60k_earners\n";
-var_dump($names_of_60k_earners);
+echo $df;
