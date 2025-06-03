@@ -182,11 +182,44 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
 
         return new self($data);
     }
+
     /**
      * Create a new DataFrame with only the projected columns (alternate to $df[[['col1'...]]])
      */
     public function project(array $columns): DataFrame {
         return $this[[$columns]];
+    }
+
+    /**
+     * Sort DataFrame with custom function
+     * 
+     * @param callable $func the sorting function
+     * @return DataFrame the new, sorted DataFrame
+     */
+    public function sort(callable $func): DataFrame {
+        $data = $this->data;
+        uasort($data, $func);
+        return new self($data);
+    }
+
+    /**
+     * Sort DataFrame by selected columns
+     * 
+     * @param mixed $cols are the col(s) to sort by
+     * @param bool $asc true to sort asc, false to desc
+     * @return DataFrame the new, sorted DataFrame
+     */
+    public function sortBy($cols, bool $asc = TRUE): DataFrame {
+        if(!is_array($cols)){
+            $cols = [$cols];
+        }
+        return $this->sort(function($a, $b) use($cols, $asc) {
+            foreach($cols as $col){
+                $cmp = $asc ? $a[$col] <=> $b[$col] : $b[$col] <=> $a[$col];
+                if($cmp) return $cmp;
+            }
+            return 0;
+        });
     }
 
     #

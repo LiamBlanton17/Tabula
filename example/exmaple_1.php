@@ -55,6 +55,6 @@ $df = Tabula::fromArray($data);
 
 $df = $df->assign('Bonus', fn($row) => $row['Salary'] * ($row['Rating'] / 10));
 
-$new_df = $df->filter(fn($row) => $row['Department'] === 'IT')->project(['Name', 'Rating', 'Bonus']);
+$new_df = $df->filter(fn($row) => $row['Department'] === 'IT')->project(['Name', 'Rating', 'Bonus'])->sortBy('Bonus');
 
 echo $new_df;
