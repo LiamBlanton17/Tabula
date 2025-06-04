@@ -55,7 +55,7 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
      * @param mixed $type is the current type of the column
      * @return int the new column type of the column
      */
-    private function _inferType(mixed $new, mixed $type): int {
+    private function _inferType($new, $type): int {
         switch(TRUE){
             case is_string($new): return $type | ColumnType::STRING;
             case is_int($new): return $type | ColumnType::INT;
@@ -479,6 +479,7 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
         return [
             'shape' => $this->shape(),
             'columns' => $this->columns(),
+            'types' => array_map(fn($type) => ColumnType::typeToString($type), $this->types),
             'preview' => $this->head(10),
         ];
     }

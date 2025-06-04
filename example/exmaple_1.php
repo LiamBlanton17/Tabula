@@ -1,5 +1,6 @@
 <?php
 
+include(__DIR__.'/../src/core/ColumnType.php');
 include(__DIR__.'/../src/core/DataFrame.php');
 include(__DIR__.'/../src/core/Tabula.php');
 
@@ -46,8 +47,9 @@ $df = $df->sortBy('Bonus', FALSE);
 # Hiding employee name, and other sensitive info - mimicking a bonus report that will only display an ambigous ID and Bonus
 # Can also be written as:
 # $df = $df->project(['ID', 'Bonus']);
-$df = $df[[['ID', 'Bonus']]];
+$df = $df[[['ID', 'Bonus']]]->inferTypes();
 
+var_dump($df);
 # The previous sequence can be a one liner:
 # $df->assign('Bonus', fn($row) => employeeBonus($row['Salary'], $row['Rating']))->sortBy('Bonus', FALSE)->project(['ID', 'Bonus']);
 
