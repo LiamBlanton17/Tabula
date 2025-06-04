@@ -28,6 +28,15 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
     }
 
     /**
+     * Function to get the data in the DataFrame as a PHP array
+     * 
+     * @return string the data as JSON
+     */
+    public function toJSON(): string {
+        return json_encode($this->data);
+    }
+
+    /**
      * Export the DataFrame to a CSV file
      *
      * @param string $filename The path to the CSV file
@@ -149,13 +158,13 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
     /**
      * Add a new column (alternative to array access)
      * 
-     * @param mixed $col is the new column name
+     * @param string $col is the new column name
      * @param mixed $value is the value to set it too
      * @return DataFrame the new DataFrame
      */
     public function assign(string $col, $value): DataFrame {
         $data = array_map(function($row) use($col, $value) {
-            $row[$col] = is_callable($value) ? $value($row): $value;
+            $row[$col] = is_callable($value) ? $value($row) : $value;
             return $row;
         }, $this->data);
 
@@ -168,7 +177,7 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
      * @param mixed $col is the column name(s)
      * @return DataFrame the new DataFrame
      */
-    public function drop(mixed $cols): DataFrame {
+    public function drop($cols): DataFrame {
         if(!is_array($cols)){
             $cols = [$cols];
         }
@@ -404,7 +413,7 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
         $rows[] = $addSeperatorRow();
 
         // Data rows
-        $rows = array_merge($rows, array_map(fn($row) => $addRow(' ', fn($col) => str_pad($row[$col] ?? '', $cols_max_width[$col])), $this->head(10)));
+        $rows = array_merge($rows, array_map(fn($row) => $addRow(' ', fn($col) => str_pad($row[$col] ?? '', $cols_max_width[$col])), $this->head(100)));
 
         // Separator row
         $rows[] = $addSeperatorRow();
