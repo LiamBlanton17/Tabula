@@ -1,7 +1,9 @@
 <?php
 
-include(__DIR__.'/../src/DataFrame.php');
-include(__DIR__.'/../src/Tabula.php');
+include(__DIR__.'/../src/core/DataFrame.php');
+include(__DIR__.'/../src/core/Tabula.php');
+
+use Tabula\Core\Tabula;
 
 # Array of Test Data
 $data = [

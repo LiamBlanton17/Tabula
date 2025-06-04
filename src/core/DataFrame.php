@@ -1,5 +1,9 @@
 <?php
 
+
+namespace Tabula\Core;
+use \ArrayAccess, \Countable, \IteratorAggregate, \JsonSerializable;
+
 /**
  * 
  */
@@ -10,8 +14,55 @@ class DataFrame implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
      */
     private array $data;
 
+    /**
+     * @var array the column types
+     */
+    private array $types = [];
+
     public function __construct(array $data) {
         $this->data = $data;
+        if(isset($data[0])){
+            $columns = $this->columns();
+            $this->types = array_fill_keys($columns, ColumnType::UNKNOWN);
+        }
+    }
+
+    #
+    # Typing functions
+    #
+
+    /**
+     * Function to infer the types of each columns. Does not return a new DataFrame, just the current one
+     * 
+     * @return self the current DataFrame
+     */
+    public function inferTypes(): self {
+        $columns = $this->columns();
+        $this->types = array_reduce($this->head(100), function($out, $row) use($columns) {
+            foreach($columns as $col){
+                $out[$col] = $this->_inferType($row[$col], $out[$col]);
+            }
+            return $out;
+        }, array_fill_keys($columns, ColumnType::UNKNOWN));
+
+        return $this;
+    }
+
+    /**
+     * Private function to infer the type of a column
+     * 
+     * @param mixed $new is the new value in the column to infer
+     * @param mixed $type is the current type of the column
+     * @return int the new column type of the column
+     */
+    private function _inferType(mixed $new, mixed $type): int {
+        switch(TRUE){
+            case is_string($new): return $type | ColumnType::STRING;
+            case is_int($new): return $type | ColumnType::INT;
+            case is_float($new): return $type | ColumnType::FLOAT;
+            case is_bool($new): return $type | ColumnType::BOOL;
+        }
+        return $type;
     }
 
     #
